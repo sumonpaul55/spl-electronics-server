@@ -7,10 +7,7 @@ const port = process.env.PORT || 5000;
 // add middleware
 app.use(cors())
 app.use(express.json())
-
-
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.nrfwsc1.mongodb.net/?retryWrites=true&w=majority`;
-
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
     serverApi: {
@@ -26,6 +23,15 @@ async function run() {
         await client.connect();
         const brandCollections = client.db("scpElectronicsDB").collection("brands")
         const productCollections = client.db("scpElectronicsDB").collection("products")
+        // get products
+        // getting brand apis
+        app.get("/products/:brand", async (req, res) => {
+            const brand = req.params.brand;
+            const query = { brandName: brand }
+            const product = productCollections.find(query);
+            const result = await product.toArray();
+            res.send(result)
+        })
 
         // getting brand apis
         app.get("/brnads", async (req, res) => {
@@ -41,7 +47,6 @@ async function run() {
             const result = await productCollections.insertOne(newProduct)
             res.send(result)
         })
-
         // add brands working
         app.post("/addBrand", async (req, res) => {
             const newBrand = req.body;
