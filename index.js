@@ -25,11 +25,20 @@ async function run() {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
         const brandCollections = client.db("scpElectronicsDB").collection("brands")
+        const productCollections = client.db("scpElectronicsDB").collection("products")
 
         // getting brand apis
         app.get("/brnads", async (req, res) => {
             const cursor = brandCollections.find();
             const result = await cursor.toArray();
+            res.send(result)
+        })
+
+
+        // add Product
+        app.post("/addProduct", async (req, res) => {
+            const newProduct = req.body;
+            const result = await productCollections.insertOne(newProduct)
             res.send(result)
         })
 
