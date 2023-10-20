@@ -24,6 +24,14 @@ async function run() {
         const brandCollections = client.db("scpElectronicsDB").collection("brands")
         const productCollections = client.db("scpElectronicsDB").collection("products")
         // get products
+        //get data wich need to update
+        app.get("/updateProduct/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await productCollections.findOne(query);
+            res.send(result)
+            console.log(result)
+        })
         // getting brand apis
         app.get("/products/:brand", async (req, res) => {
             const brand = req.params.brand;
@@ -51,6 +59,26 @@ async function run() {
         app.post("/addBrand", async (req, res) => {
             const newBrand = req.body;
             const result = await brandCollections.insertOne(newBrand)
+            res.send(result)
+        })
+
+        // update Products
+        app.put("/updateProduct/:id", async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) }
+            const product = req.body;
+            const updateProduct = {
+                $set: {
+                    productName: product.productName,
+                    porductImg: product.porductImg,
+                    brandName: product.brandName,
+                    productType: product.productType,
+                    desc: product.desc,
+                    rate: product.rate,
+                    price: product.price
+                },
+            };
+            const result = await productCollections.updateOne(filter, updateProduct)
             res.send(result)
         })
         // delete specific product
