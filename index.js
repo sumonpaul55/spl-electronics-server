@@ -20,9 +20,10 @@ const client = new MongoClient(uri, {
 async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
-        await client.connect();
-        const brandCollections = client.db("scpElectronicsDB").collection("brands")
-        const productCollections = client.db("scpElectronicsDB").collection("products")
+        // await client.connect();
+        const brandCollections = client.db("scpElectronicsDB").collection("brands");
+        const productCollections = client.db("scpElectronicsDB").collection("products");
+        const cartCollection = client.db("scpElectronicsDB").collection("myCart");
         // get products
         //get data wich need to update
         app.get("/updateProduct/:id", async (req, res) => {
@@ -45,18 +46,27 @@ async function run() {
             const result = await product.toArray();
             res.send(result)
         })
-
+        // get data from cart
+        app.get("/myCart", async (req, res) => {
+            const result = await cartCollection.find().toArray();
+            res.send(result)
+        })
         // getting brand apis
         app.get("/brnads", async (req, res) => {
             const cursor = brandCollections.find();
             const result = await cursor.toArray();
             res.send(result)
         })
-
         // add Product
         app.post("/addProduct", async (req, res) => {
             const newProduct = req.body;
             const result = await productCollections.insertOne(newProduct)
+            res.send(result)
+        })
+        // add Product to cart
+        app.post("/addtToCart", async (req, res) => {
+            const newAddedProduct = req.body;
+            const result = await cartCollection.insertOne(newAddedProduct)
             res.send(result)
         })
         // add brands working
@@ -84,6 +94,14 @@ async function run() {
             };
             const result = await productCollections.updateOne(filter, updateProduct)
             res.send(result)
+        })
+        // delete data from cart
+        app.delete("/deleteCart/:id", async (req, res) => {
+            const deleteid = req.params.id;
+            const query = { _id: new ObjectId(deleteid) }
+            const result = await cartCollection.deleteOne(query)
+            res.send(result)
+            console.log(query)
         })
         // delete specific product
         app.delete("/product/:id", async (req, res) => {
