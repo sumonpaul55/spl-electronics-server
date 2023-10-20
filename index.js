@@ -30,7 +30,12 @@ async function run() {
             const query = { _id: new ObjectId(id) }
             const result = await productCollections.findOne(query);
             res.send(result)
-            console.log(result)
+        })
+        app.get("/productDetail/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await productCollections.findOne(query);
+            res.send(result)
         })
         // getting brand apis
         app.get("/products/:brand", async (req, res) => {
@@ -47,7 +52,6 @@ async function run() {
             const result = await cursor.toArray();
             res.send(result)
         })
-
 
         // add Product
         app.post("/addProduct", async (req, res) => {
