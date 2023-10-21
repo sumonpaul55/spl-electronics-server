@@ -59,7 +59,6 @@ async function run() {
             const cursor = cartCollection.find(query)
             const result = await cursor.toArray();
             res.send(result)
-            console.log(userEmail)
         })
         // getting brand apis
         app.get("/brnads", async (req, res) => {
@@ -111,7 +110,6 @@ async function run() {
             const query = { _id: new ObjectId(deleteid) }
             const result = await cartCollection.deleteOne(query)
             res.send(result)
-            console.log(query)
         })
         // delete specific product
         app.delete("/product/:id", async (req, res) => {
