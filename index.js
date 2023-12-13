@@ -61,6 +61,16 @@ async function run() {
             const result = await cursor.toArray();
             res.send(result)
         })
+        // getting total Carts Items;
+        app.get(`/myCart-total/:email`, async (req, res) => {
+            const userEmail = req.params.email;
+            const query = { email: userEmail }
+            const cursor = cartCollection.find(query)
+            const result = (await cursor.toArray());
+            res.send(result)
+        })
+
+
         // getting brand apis
         app.get("/brnads", async (req, res) => {
             const cursor = brandCollections.find();
