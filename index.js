@@ -67,6 +67,11 @@ async function run() {
             const result = await cursor.toArray();
             res.send(result)
         })
+        // getting all upcommming category data
+        app.get("/upcomming-category", async (req, res) => {
+            const result = (await upCommingCategroyCollections.find().toArray()).reverse();
+            res.send(result)
+        })
         // post the upcomming category
         app.post("/upcommingCategory", async (req, res) => {
             const data = req.body;
