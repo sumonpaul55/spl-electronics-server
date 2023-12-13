@@ -24,6 +24,7 @@ async function run() {
         const brandCollections = client.db("scpElectronicsDB").collection("brands");
         const productCollections = client.db("scpElectronicsDB").collection("products");
         const cartCollection = client.db("scpElectronicsDB").collection("myCart");
+        const upCommingCategroyCollections = client.db("scpElectronicsDB").collection("upCommingCategroy");
         // get products
         //get data wich need to update
         app.get("/updateProduct/:id", async (req, res) => {
@@ -64,6 +65,12 @@ async function run() {
         app.get("/brnads", async (req, res) => {
             const cursor = brandCollections.find();
             const result = await cursor.toArray();
+            res.send(result)
+        })
+        // post the upcomming category
+        app.post("/upcommingCategory", async (req, res) => {
+            const data = req.body;
+            const result = await upCommingCategroyCollections.insertOne(data);
             res.send(result)
         })
         // add Product
